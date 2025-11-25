@@ -3,7 +3,7 @@ const testimonials = [
     quote: "The shoes I bought are super comfortable and stylish!",
     name: "Ayesha Rahman",
     role: "Verified Buyer",
-    avatar: "https://i.pravatar.cc/100?img=1", r
+    avatar: "https://i.pravatar.cc/100?img=1",
     rating: 5,
   },
   {
