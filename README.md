@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛒 Next.js E-Commerce Project
 
-## Getting Started
+A modern, responsive e-commerce web application built with **Next.js (App Router)**, React, TailwindCSS, and Axios.  
+This project demonstrates product listing, category filtering, search with highlighted results, and reusable UI components.  
+Designed for deployment on **Vercel** with a separate backend (Express/MongoDB).
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📖 Project Description
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This app provides a clean and professional e-commerce experience:
+- Product grid with images, descriptions, and prices
+- Search bar with **highlighted matches** in product titles
+- Category dropdown filter
+- Product detail pages
+- Testimonials section with star ratings
+- Responsive design for mobile and desktop
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Setup & Installation
 
-## Learn More
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ShamimWebDev/next-ecommerce.git
+   cd next-ecommerce
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
