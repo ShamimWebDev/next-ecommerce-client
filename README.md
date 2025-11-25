@@ -2,6 +2,8 @@
 
 **Live Site URL:** [https://next-ecommerce190.vercel.app/](https://next-ecommerce190.vercel.app/)
 
+**Server Site URL:** [https://next-ecommerce-server-eta.vercel.app/](https://next-ecommerce-server-eta.vercel.app/)
+
 Next‑Ecommerce is a modern online shopping platform where customers can **browse**, **filter**, and **purchase** products with ease. It provides a clean, responsive UI for discovering items, managing carts, and enjoying a seamless checkout experience.
 
 ---
@@ -74,6 +76,7 @@ git clone https://github.com/ShamimWebDev/next-ecommerce-client
 cd next-ecommerce
 
 2. **Install dependencies**
+
 ```bash
 npm install
 
@@ -84,19 +87,24 @@ Create a .env.local file in the root directory
 Add MongoDB URI, NextAuth secrets, and any other necessary API keys
 
 4. **Start the development server**
+
 ```bash
 npm run dev
 The app will run at http://localhost:3000 (Next.js default)
 
 5. **Build for production**
+
 ```bash
 npm run build
 npm start
 
 6. **Lint the project**
+
 ```bash
+
 npm run lint
 
 Now you can explore and test Next‑Ecommerce fully on your local machine.
 
 
+````
