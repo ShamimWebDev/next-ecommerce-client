@@ -13,28 +13,32 @@ export default function AddProduct() {
   const [date, setDate] = useState("");
   const [priority, setPriority] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [category, setCategory] = useState(""); e
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     if (status === "unauthenticated") signIn();
   }, [status]);
 
-  if (status === "loading") return <p className="text-center mt-10">Loading...</p>;
+  if (status === "loading")
+    return <p className="text-center mt-10">Loading...</p>;
   if (!session) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://next-ecommerce-server-eta.vercel.app/products", {
-        title,
-        shortDesc,
-        fullDesc,
-        price,
-        date,
-        priority,
-        imageUrl,
-        category, 
-      });
+      await axios.post(
+        "https://next-ecommerce-server-eta.vercel.app/products",
+        {
+          title,
+          shortDesc,
+          fullDesc,
+          price,
+          date,
+          priority,
+          imageUrl,
+          category,
+        }
+      );
       toast.success(" Product added successfully!");
       setTitle("");
       setShortDesc("");
