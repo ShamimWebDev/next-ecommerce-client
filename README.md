@@ -4,7 +4,8 @@
 
 **Server Site URL:** [https://next-ecommerce-server-eta.vercel.app/](https://next-ecommerce-server-eta.vercel.app/)
 
-Next‑Ecommerce is a modern online shopping platform where customers can **browse**, **filter**, and **purchase** products with ease. It provides a clean, responsive UI for discovering items, managing carts, and enjoying a seamless checkout experience.
+A modern, responsive Next.js (App Router) e-commerce web application with product listings, search, filtering, product details, and clean UI components.
+The app uses a separate Express + MongoDB backend, Axios for API communication, TailwindCSS for styling, and NextAuth.js for authentication.
 
 ---
 
