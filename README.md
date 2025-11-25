@@ -68,38 +68,50 @@ The app uses a separate Express + MongoDB backend, Axios for API communication, 
 
 ## 💻 How to Run Locally
 
-Follow these steps to run Next‑Ecommerce on your local machine:
 
-1. **Clone the repository**
-
-````bash
+### 1️⃣ Clone Repository
+```
 git clone https://github.com/ShamimWebDev/next-ecommerce-client
-cd next-ecommerce
+cd next-ecommerce-client
+```
 
-2. **Install dependencies**
 
+### 2️⃣ Install Dependencies
+```
 npm install
+```
 
-3. **Set up environment variables**
 
-Create a .env.local file in the root directory
+### 3️⃣ Create Environment Variables
+Create a file named:
+```
+.env.local
+```
+Add:
+```
+NEXTAUTH_SECRET=your_secret
+NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:5000
+MONGODB_URI=your_mongo_uri
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
+```
 
-Add MongoDB URI, NextAuth secrets, and any other necessary API keys
 
-4. **Start the development server**
-
+### 4️⃣ Start Development Server
+```
 npm run dev
-The app will run at http://localhost:3000 (Next.js default)
+```
+➡️ App runs at http://localhost:3000
 
-5. **Build for production**
 
+### 5️⃣ Build for Production
+```
 npm run build
 npm start
+```
 
-6. **Lint the project**
 
+### 6️⃣ Lint the Project
+```
 npm run lint
-
-Now you can explore and test Next‑Ecommerce fully on your local machine.
-
-````
