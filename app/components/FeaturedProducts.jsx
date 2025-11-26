@@ -40,7 +40,7 @@ export default function FeaturedProducts() {
                     width={400}
                     height={300}
                     unoptimized
-                    className="object-cover rounded-lg"
+                    // className="object-cover rounded-lg"
                   />
                 ) : (
                   <span className="text-slate-400">No Image</span>
