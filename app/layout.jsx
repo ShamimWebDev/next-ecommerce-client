@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
       <body className="bg-white text-slate-900">
         <SessionProvider>
           <Navbar />
-          <main className="flex-grow">{children}</main>
+          <main className="grow">{children}</main>
           {/*  Toastify container */}
           <ToastContainer position="top-right" autoClose={3000} />
         </SessionProvider>

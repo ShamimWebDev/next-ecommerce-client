@@ -1,3 +1,6 @@
+import Image from "next/image";
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <section className="relative bg-gradient-to-r from-indigo-50 via-white to-indigo-50 py-20">
@@ -13,27 +16,29 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <a
+            <Link
               href="/products"
               className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-md"
             >
               Browse Products
-            </a>
-            <a
+            </Link>
+            <Link
               href="/register"
               className="px-6 py-3 border border-slate-300 rounded-lg hover:bg-slate-100 transition"
             >
               Join Now
-            </a>
+            </Link>
           </div>
         </div>
 
         {/* Right Image */}
         <div className="flex-1 flex justify-center">
-          <img
-            src="/hero-shopping.png" 
+          <Image
+            src="/hero-shopping.png"
             alt="Shopping illustration"
-            className="w-full max-w-md rounded-xl "
+            width={400}
+            height={300}
+            className="w-full max-w-md rounded-xl"
           />
         </div>
       </div>
