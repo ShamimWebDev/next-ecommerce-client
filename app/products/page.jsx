@@ -17,15 +17,18 @@ export default function ProductsPage() {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
-    axios.get("https://next-ecommerce-server-eta.vercel.app/products").then((res) => setProducts(res.data));
+    axios
+      .get("https://next-ecommerce-server-eta.vercel.app/products")
+      .then((res) => setProducts(res.data));
   }, []);
 
   const filteredProducts = products.filter((p) => {
-  const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
-  const matchCategory = category ? p.category.toLowerCase() === category.toLowerCase() : true;
-  return matchSearch && matchCategory;
-});
-
+    const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
+    const matchCategory = category
+      ? p.category.toLowerCase() === category.toLowerCase()
+      : true;
+    return matchSearch && matchCategory;
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
@@ -33,7 +36,8 @@ export default function ProductsPage() {
       <div className="text-center mb-10">
         <h2 className="text-4xl font-bold text-slate-900">Our Products</h2>
         <p className="mt-2 text-slate-600 max-w-2xl mx-auto">
-          Explore our latest collection. Use search or filter to find what you need.
+          Explore our latest collection. Use search or filter to find what you
+          need.
         </p>
       </div>
 
@@ -71,7 +75,7 @@ export default function ProductsPage() {
             <div className="h-40 bg-slate-100 flex items-center justify-center">
               {p.imageUrl ? (
                 <img
-                  src={p.imageUrl}
+                  src={p.image}
                   alt={p.title}
                   className="h-full w-full object-cover"
                 />
@@ -85,7 +89,9 @@ export default function ProductsPage() {
               {/*  Title with highlight */}
               <h3
                 className="text-lg font-semibold text-slate-900 truncate"
-                dangerouslySetInnerHTML={{ __html: highlightText(p.title, search) }}
+                dangerouslySetInnerHTML={{
+                  __html: highlightText(p.title, search),
+                }}
               ></h3>
 
               <p className="mt-2 text-slate-600 line-clamp-2">{p.shortDesc}</p>

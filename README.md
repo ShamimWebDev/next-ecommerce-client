@@ -68,26 +68,29 @@ The app uses a separate Express + MongoDB backend, Axios for API communication, 
 
 ## 💻 How to Run Locally
 
-
 ### 1️⃣ Clone Repository
+
 ```
 git clone https://github.com/ShamimWebDev/next-ecommerce-client
 cd next-ecommerce-client
 ```
 
-
 ### 2️⃣ Install Dependencies
+
 ```
 npm install
 ```
 
-
 ### 3️⃣ Create Environment Variables
+
 Create a file named:
+
 ```
 .env.local
 ```
+
 Add:
+
 ```
 NEXTAUTH_SECRET=your_secret
 NEXTAUTH_URL=http://localhost:3000
@@ -97,21 +100,23 @@ GOOGLE_CLIENT_ID=your_client_id
 GOOGLE_CLIENT_SECRET=your_client_secret
 ```
 
-
 ### 4️⃣ Start Development Server
+
 ```
 npm run dev
 ```
+
 ➡️ App runs at http://localhost:3000
 
-
 ### 5️⃣ Build for Production
+
 ```
 npm run build
 npm start
 ```
 
-
 ### 6️⃣ Lint the Project
+
 ```
 npm run lint
+```

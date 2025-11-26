@@ -9,7 +9,9 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    axios.get(`https://next-ecommerce-server-eta.vercel.app/products/${id}`).then((res) => setProduct(res.data));
+    axios
+      .get(`https://next-ecommerce-server-eta.vercel.app/products/${id}`)
+      .then((res) => setProduct(res.data));
   }, [id]);
 
   if (!product) return <p className="text-center mt-10">Loading...</p>;
@@ -20,7 +22,7 @@ export default function ProductDetails() {
       <div className="w-full h-64 md:h-96 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center mb-8">
         {product.imageUrl ? (
           <img
-            src={product.imageUrl}
+            src={product.image}
             alt={product.title}
             className="w-full h-full object-cover"
           />
@@ -30,14 +32,18 @@ export default function ProductDetails() {
       </div>
 
       {/* Product title */}
-      <h2 className="text-3xl font-bold text-slate-900 mb-4">{product.title}</h2>
+      <h2 className="text-3xl font-bold text-slate-900 mb-4">
+        {product.title}
+      </h2>
 
       {/* Full description */}
       <p className="text-slate-700 leading-relaxed mb-6">{product.fullDesc}</p>
 
       {/* Meta info */}
       <div className="flex flex-wrap gap-6 text-slate-600 mb-8">
-        <span className="font-semibold text-indigo-600">💲 Price: ${product.price}</span>
+        <span className="font-semibold text-indigo-600">
+          💲 Price: ${product.price}
+        </span>
         {product.date && <span>📅 Date: {product.date}</span>}
         {product.priority && (
           <span className="capitalize">⚡ Priority: {product.priority}</span>
