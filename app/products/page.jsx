@@ -78,14 +78,15 @@ export default function ProductsPage() {
             {/* Image */}
             <div className="h-40 bg-slate-100 flex items-center justify-center">
               {(() => {
-                console.log("Image URL:", p.image);
+                // console.log("Image URL:", p.image);
                 return p.image ? (
                   <Image
                     src={p.image}
                     alt={p.title}
-                    width={400}
-                    height={300}
-                    unoptimized
+                    // width={400}
+                    // height={300}
+                    // unoptimized
+                    className="h-full w-full object-cover"
                   />
                 ) : (
                   <span className="text-slate-400">No Image</span>

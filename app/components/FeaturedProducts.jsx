@@ -2,12 +2,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get("https://next-ecommerce-server-eta.vercel.app/products").then((res) => setProducts(res.data));
+    axios
+      .get("https://next-ecommerce-server-eta.vercel.app/products")
+      .then((res) => {
+        // console.log("Featured products fetched:", res.data);
+        setProducts(res.data);
+      });
   }, []);
 
   return (
@@ -25,19 +31,27 @@ export default function FeaturedProducts() {
           >
             {/* Image */}
             <div className="h-40 bg-slate-100 flex items-center justify-center mb-4">
-              {p.imageUrl ? (
-                <img
-                  src={p.imageUrl}
-                  alt={p.title}
-                  className="h-full w-full object-cover rounded-lg"
-                />
-              ) : (
-                <span className="text-slate-400">No Image</span>
-              )}
+              {(() => {
+                // console.log("Image URL:", p.image);
+                return p.image ? (
+                  <Image
+                    src={p.image}
+                    alt={p.title}
+                    width={400}
+                    height={300}
+                    // unoptimized
+                    className="h-full w-full object-cover rounded-lg"
+                  />
+                ) : (
+                  <span className="text-slate-400">No Image</span>
+                );
+              })()}
             </div>
 
             {/* Title */}
-            <h3 className="text-lg font-semibold text-slate-900 truncate">{p.title}</h3>
+            <h3 className="text-lg font-semibold text-slate-900 truncate">
+              {p.title}
+            </h3>
             <p className="mt-2 text-slate-600 line-clamp-2">{p.shortDesc}</p>
 
             {/* Price + Category */}
