@@ -21,7 +21,7 @@ export default function ProductDetails() {
     <div className="max-w-5xl mx-auto px-4 py-16">
       {/* Large image/banner */}
       <div className="w-full h-64 md:h-96 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center mb-8">
-        {product.imageUrl ? (
+        {product.image ? (
           <Image
             src={product.image}
             alt={product.title}

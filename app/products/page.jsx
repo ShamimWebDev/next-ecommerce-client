@@ -74,7 +74,7 @@ export default function ProductsPage() {
           >
             {/* Image */}
             <div className="h-40 bg-slate-100 flex items-center justify-center">
-              {p.imageUrl ? (
+              {p.image ? (
                 <Image
                   src={p.image}
                   alt={p.title}
