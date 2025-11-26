@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -21,7 +22,7 @@ export default function ProductDetails() {
       {/* Large image/banner */}
       <div className="w-full h-64 md:h-96 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center mb-8">
         {product.imageUrl ? (
-          <img
+          <Image
             src={product.image}
             alt={product.title}
             className="w-full h-full object-cover"

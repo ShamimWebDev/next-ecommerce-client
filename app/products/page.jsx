@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 
 // Helper function to highlight search matches
 function highlightText(text, query) {
@@ -74,7 +75,7 @@ export default function ProductsPage() {
             {/* Image */}
             <div className="h-40 bg-slate-100 flex items-center justify-center">
               {p.imageUrl ? (
-                <img
+                <Image
                   src={p.image}
                   alt={p.title}
                   className="h-full w-full object-cover"
