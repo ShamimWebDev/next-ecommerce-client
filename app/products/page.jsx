@@ -20,7 +20,10 @@ export default function ProductsPage() {
   useEffect(() => {
     axios
       .get("https://next-ecommerce-server-eta.vercel.app/products")
-      .then((res) => setProducts(res.data));
+      .then((res) => {
+        console.log("Products fetched:", res.data);
+        setProducts(res.data);
+      });
   }, []);
 
   const filteredProducts = products.filter((p) => {
@@ -74,22 +77,24 @@ export default function ProductsPage() {
           >
             {/* Image */}
             <div className="h-40 bg-slate-100 flex items-center justify-center">
-              {p.image ? (
-                <Image
-                  src={p.image}
-                  alt={p.title}
-                  width={400}
-                  height={300}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span className="text-slate-400">No Image</span>
-              )}
+              {(() => {
+                console.log("Image URL:", p.image);
+                return p.image ? (
+                  <Image
+                    src={p.image}
+                    alt={p.title}
+                    width={400}
+                    height={300}
+                    unoptimized
+                  />
+                ) : (
+                  <span className="text-slate-400">No Image</span>
+                );
+              })()}
             </div>
 
             {/* Content */}
             <div className="p-6 flex flex-col flex-grow">
-              {/*  Title with highlight */}
               <h3
                 className="text-lg font-semibold text-slate-900 truncate"
                 dangerouslySetInnerHTML={{
@@ -100,7 +105,6 @@ export default function ProductsPage() {
               <p className="mt-2 text-slate-600 line-clamp-2">{p.shortDesc}</p>
               <p className="mt-2 font-bold text-indigo-600">${p.price}</p>
 
-              {/* Category badge */}
               {p.category && (
                 <span className="mb-2 inline-block px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded">
                   {p.category}
