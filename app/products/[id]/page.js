@@ -30,10 +30,10 @@ export default function ProductDetails() {
             <Image
               src={product.image}
               alt={product.title}
-              // width={800}
-              // height={600}
-              // unoptimized
-              className="w-full h-full object-cover"
+              width={800}
+              height={600}
+              unoptimized
+              // className="w-full h-full object-cover"
             />
           ) : (
             <span className="text-slate-400">No Image Available</span>

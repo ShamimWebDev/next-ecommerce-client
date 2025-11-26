@@ -39,8 +39,8 @@ export default function FeaturedProducts() {
                     alt={p.title}
                     width={400}
                     height={300}
-                    // unoptimized
-                    className="h-full w-full object-cover rounded-lg"
+                    unoptimized
+                    className="object-cover rounded-lg"
                   />
                 ) : (
                   <span className="text-slate-400">No Image</span>

@@ -83,10 +83,10 @@ export default function ProductsPage() {
                   <Image
                     src={p.image}
                     alt={p.title}
-                    // width={400}
-                    // height={300}
-                    // unoptimized
-                    className="h-full w-full object-cover"
+                    width={400}
+                    height={300}
+                    unoptimized
+                    // className="h-full w-full object-cover"
                   />
                 ) : (
                   <span className="text-slate-400">No Image</span>
