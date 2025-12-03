@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { Menu, X, ShoppingBag, Heart, User, LogOut, Package, PlusCircle, Settings } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
+import { useShop } from "@/context/ShopContext";
 
 /**
  * Navigation Bar Component
@@ -24,6 +25,7 @@ import { Button } from "@/app/components/ui/button";
 export default function Navbar() {
   // Retrieve current user session from NextAuth
   const { data: session } = useSession();
+  const { cart, wishlist } = useShop();
   
   // State management for dropdown and mobile menu visibility
   const [open, setOpen] = useState(false);
@@ -38,7 +40,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className=" sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           
@@ -65,17 +67,27 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             
             {/* Wishlist Icon Button */}
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" asChild className="relative">
               <Link href="/wishlist">
                 <Heart className="h-5 w-5" />
+                {wishlist.length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center">
+                    {wishlist.length}
+                  </span>
+                )}
                 <span className="sr-only">Wishlist</span>
               </Link>
             </Button>
 
             {/* Shopping Cart Icon Button */}
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" asChild className="relative">
               <Link href="/cart">
                 <ShoppingBag className="h-5 w-5" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center">
+                    {cart.length}
+                  </span>
+                )}
                 <span className="sr-only">Cart</span>
               </Link>
             </Button>

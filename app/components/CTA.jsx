@@ -4,14 +4,14 @@ import { ShieldCheck, Truck, Users } from "lucide-react";
 
 export default function CTA() {
   return (
-    <section className="relative overflow-hidden bg-primary py-24 text-primary-foreground">
+    <section className="relative overflow-hidden bg-primary py-16 text-primary-foreground">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
       </div>
       
       <div className="container relative mx-auto px-4 text-center">
-        <div className="mx-auto max-w-3xl space-y-8">
+        <div className="mx-auto max-w-3xl space-y-6">
           <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             Ready to Shop Smarter?
           </h2>

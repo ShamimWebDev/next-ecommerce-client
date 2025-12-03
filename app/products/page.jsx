@@ -8,7 +8,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/app/comp
 import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
-import { Search, SlidersHorizontal, Eye } from "lucide-react";
+import { Search, SlidersHorizontal, Eye, ShoppingCart, Heart } from "lucide-react";
+import { useShop } from "@/context/ShopContext";
 
 // Helper function to highlight search matches
 function highlightText(text, query) {
@@ -23,6 +24,7 @@ export default function ProductsPage() {
   const [category, setCategory] = useState("");
   const [priceRange, setPriceRange] = useState("all");
   const [loading, setLoading] = useState(true);
+  const { addToCart, addToWishlist } = useShop();
 
   useEffect(() => {
     axios
@@ -130,7 +132,7 @@ export default function ProductsPage() {
           ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((p) => (
-                <Card key={p._id} className="group overflow-hidden hover:shadow-lg transition-all duration-300">
+                <Card key={p._id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
                   <div className="relative aspect-square overflow-hidden bg-muted">
                     {p.image ? (
                       <Image
@@ -146,32 +148,43 @@ export default function ProductsPage() {
                       </div>
                     )}
                     {p.category && (
-                      <Badge className="absolute top-3 right-3 uppercase text-[10px] tracking-wider" variant="secondary">
+                      <Badge className="absolute top-3 left-3 uppercase text-[10px] tracking-wider" variant="secondary">
                         {p.category}
                       </Badge>
                     )}
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="absolute top-3 right-3 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => addToWishlist(p)}
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
                   </div>
 
-                  <CardHeader className="p-4">
+                  <CardHeader className="p-4 pb-2">
                     <CardTitle className="line-clamp-1 text-lg group-hover:text-primary transition-colors">
                       <span dangerouslySetInnerHTML={{ __html: highlightText(p.title, search) }} />
                     </CardTitle>
-                    <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center justify-between mt-1">
                       <span className="text-xl font-bold text-primary">${p.price}</span>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="p-4 pt-0">
+                  <CardContent className="p-4 pt-0 flex-grow">
                     <p className="text-sm text-muted-foreground line-clamp-2">
                       {p.shortDesc}
                     </p>
                   </CardContent>
 
-                  <CardFooter className="p-4 pt-0">
-                    <Button asChild className="w-full gap-2">
+                  <CardFooter className="p-4 pt-0 gap-2">
+                    <Button asChild variant="outline" className="flex-1 gap-2">
                       <Link href={`/products/${p._id}`}>
-                        <Eye className="h-4 w-4" /> View Details
+                        <Eye className="h-4 w-4" /> Details
                       </Link>
+                    </Button>
+                    <Button className="flex-1 gap-2" onClick={() => addToCart(p)}>
+                      <ShoppingCart className="h-4 w-4" /> Add
                     </Button>
                   </CardFooter>
                 </Card>

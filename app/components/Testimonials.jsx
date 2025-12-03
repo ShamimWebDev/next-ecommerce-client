@@ -29,9 +29,9 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="bg-muted/50 py-20">
+    <section className="bg-muted/30 py-12">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 space-y-4">
+        <div className="text-center mb-10 space-y-3">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">What Our Customers Say</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Trusted by thousands of happy shoppers worldwide. Read their stories.
