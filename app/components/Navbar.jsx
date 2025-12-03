@@ -1,7 +1,5 @@
 "use client";
 import Link from "next/link";
-"use client";
-import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -145,10 +143,15 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              // Display Login Button if User Not Authenticated
-              <Button asChild>
-                <Link href="/login">Login</Link>
-              </Button>
+              // Display Login and Register Buttons if User Not Authenticated
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/register">Register</Link>
+                </Button>
+              </div>
             )}
           </div>
 
@@ -235,14 +238,23 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                // Mobile Login Link
-                <Link
-                  href="/login"
-                  className="block px-3 py-2 text-base font-medium text-primary hover:bg-muted rounded-md"
-                  onClick={() => setMobileMenu(false)}
-                >
-                  Login
-                </Link>
+                // Mobile Login and Register Links
+                <>
+                  <Link
+                    href="/login"
+                    className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary hover:bg-muted rounded-md"
+                    onClick={() => setMobileMenu(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="block px-3 py-2 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-center"
+                    onClick={() => setMobileMenu(false)}
+                  >
+                    Register
+                  </Link>
+                </>
               )}
             </div>
           </div>
