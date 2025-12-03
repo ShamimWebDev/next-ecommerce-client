@@ -40,9 +40,13 @@ export default function Hero() {
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden">
-                     {/* Placeholder avatars */}
-                     <div className="w-full h-full bg-slate-200" />
+                  <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden relative">
+                     <Image
+                       src={`https://i.pravatar.cc/100?img=${i + 10}`}
+                       alt={`Customer ${i}`}
+                       fill
+                       className="object-cover"
+                     />
                   </div>
                 ))}
               </div>
