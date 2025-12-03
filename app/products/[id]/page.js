@@ -8,12 +8,14 @@ import { Button } from "@/app/components/ui/button";
 import { Badge } from "@/app/components/ui/badge";
 import { Card, CardContent } from "@/app/components/ui/card";
 import { ArrowLeft, ShoppingCart, Heart, Share2, Truck, ShieldCheck, Clock } from "lucide-react";
+import { useShop } from "@/context/ShopContext";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { addToCart, addToWishlist } = useShop();
 
   useEffect(() => {
     if (!id) return;
@@ -116,10 +118,10 @@ export default function ProductDetails() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="flex-1 gap-2">
+            <Button size="lg" className="flex-1 gap-2" onClick={() => addToCart(product)}>
               <ShoppingCart className="h-5 w-5" /> Add to Cart
             </Button>
-            <Button size="lg" variant="outline" className="gap-2">
+            <Button size="lg" variant="outline" className="gap-2" onClick={() => addToWishlist(product)}>
               <Heart className="h-5 w-5" /> Wishlist
             </Button>
             <Button size="lg" variant="ghost" className="px-3">

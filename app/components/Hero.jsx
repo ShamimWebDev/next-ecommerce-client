@@ -5,7 +5,7 @@ import { ArrowRight, ShoppingBag } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-background to-muted/20 py-12 lg:py-16">
+    <section className="relative overflow-hidden bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
           {/* Left Content */}
