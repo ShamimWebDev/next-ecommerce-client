@@ -3,10 +3,15 @@ import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { Button } from "@/app/components/ui/button";
+import { Badge } from "@/app/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { Trash2, Eye, Edit, Package } from "lucide-react";
 
 export default function ManageProducts() {
   const { data: session, status } = useSession();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (status === "unauthenticated") signIn();
@@ -14,67 +19,95 @@ export default function ManageProducts() {
   }, [status]);
 
   const loadProducts = async () => {
-    const res = await axios.get("https://next-ecommerce-server-eta.vercel.app/products");
-    setProducts(res.data);
+    try {
+      const res = await axios.get("https://next-ecommerce-server-eta.vercel.app/products");
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Failed to load products", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`https://next-ecommerce-server-eta.vercel.app/products/${id}`);
-    loadProducts();
+    if (confirm("Are you sure you want to delete this product?")) {
+      await axios.delete(`https://next-ecommerce-server-eta.vercel.app/products/${id}`);
+      loadProducts();
+    }
   };
 
-  if (status === "loading") return <p className="text-center mt-10">Loading...</p>;
+  if (status === "loading" || loading) {
+    return (
+      <div className="container mx-auto px-4 py-16 space-y-4">
+        <div className="h-10 w-48 bg-muted rounded animate-pulse mx-auto" />
+        <div className="h-64 w-full bg-muted rounded-xl animate-pulse" />
+      </div>
+    );
+  }
+
   if (!session) return null;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
-      <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
-        Manage Products
-      </h2>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-slate-200 rounded-lg shadow-sm">
-          <thead className="bg-slate-100">
-            <tr>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-slate-700">Title</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-slate-700">Category</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-slate-700">Price</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-slate-700">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr key={p._id} className="border-t hover:bg-slate-50">
-                <td className="px-4 py-2">{p.title}</td>
-                <td className="px-4 py-2 capitalize">
-                  {p.category ? (
-                    <span className="inline-block px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700">
-                      {p.category}
-                    </span>
-                  ) : (
-                    <span className="text-slate-400">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-2 font-semibold text-indigo-600">${p.price}</td>
-                <td className="px-4 py-2 space-x-2">
-                  <Link
-                    href={`/products/${p._id}`}
-                    className="inline-block px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                  >
-                    View
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(p._id)}
-                    className="inline-block px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="container mx-auto px-4 py-12">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-2xl font-bold flex items-center gap-2">
+            <Package className="h-6 w-6" /> Manage Products
+          </CardTitle>
+          <Button asChild>
+            <Link href="/add-product">Add New Product</Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-muted/50 text-muted-foreground font-medium">
+                <tr>
+                  <th className="px-4 py-3">Title</th>
+                  <th className="px-4 py-3">Category</th>
+                  <th className="px-4 py-3">Price</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {products.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="px-4 py-8 text-center text-muted-foreground">
+                      No products found.
+                    </td>
+                  </tr>
+                ) : (
+                  products.map((p) => (
+                    <tr key={p._id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-medium">{p.title}</td>
+                      <td className="px-4 py-3">
+                        {p.category ? (
+                          <Badge variant="secondary" className="capitalize">
+                            {p.category}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 font-semibold">${p.price}</td>
+                      <td className="px-4 py-3 text-right space-x-2">
+                        <Button size="icon" variant="ghost" asChild>
+                          <Link href={`/products/${p._id}`}>
+                            <Eye className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                        <Button size="icon" variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDelete(p._id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

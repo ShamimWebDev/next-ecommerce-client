@@ -3,17 +3,24 @@ import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/app/components/ui/card";
+import { PlusCircle, Image as ImageIcon } from "lucide-react";
 
 export default function AddProduct() {
   const { data: session, status } = useSession();
-  const [title, setTitle] = useState("");
-  const [shortDesc, setShortDesc] = useState("");
-  const [fullDesc, setFullDesc] = useState("");
-  const [price, setPrice] = useState("");
-  const [date, setDate] = useState("");
-  const [priority, setPriority] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    shortDesc: "",
+    fullDesc: "",
+    price: "",
+    date: "",
+    priority: "",
+    imageUrl: "",
+    category: "",
+  });
 
   useEffect(() => {
     if (status === "unauthenticated") signIn();
@@ -23,130 +30,160 @@ export default function AddProduct() {
     return <p className="text-center mt-10">Loading...</p>;
   if (!session) return null;
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post(
         "https://next-ecommerce-server-eta.vercel.app/products",
-        {
-          title,
-          shortDesc,
-          fullDesc,
-          price,
-          date,
-          priority,
-          imageUrl,
-          category,
-        }
+        formData
       );
-      toast.success(" Product added successfully!");
-      setTitle("");
-      setShortDesc("");
-      setFullDesc("");
-      setPrice("");
-      setDate("");
-      setPriority("");
-      setImageUrl("");
-      setCategory("");
+      toast.success("Product added successfully!");
+      setFormData({
+        title: "",
+        shortDesc: "",
+        fullDesc: "",
+        price: "",
+        date: "",
+        priority: "",
+        imageUrl: "",
+        category: "",
+      });
     } catch (err) {
       toast.error("❌ Failed to add product");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-white p-8 rounded-xl shadow-md"
-      >
-        <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">
-          Add Product
-        </h2>
+    <div className="container mx-auto px-4 py-12">
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold flex items-center gap-2">
+            <PlusCircle className="h-6 w-6" /> Add New Product
+          </CardTitle>
+          <CardDescription>
+            Fill in the details below to add a new product to the store.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Title</label>
+                <Input
+                  name="title"
+                  placeholder="Product Title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Price ($)</label>
+                <Input
+                  name="price"
+                  type="number"
+                  placeholder="0.00"
+                  value={formData.price}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
 
-        {/* Title */}
-        <input
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        />
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Short Description</label>
+              <Input
+                name="shortDesc"
+                placeholder="Brief summary of the product"
+                value={formData.shortDesc}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        {/* Short Description */}
-        <input
-          placeholder="Short Description"
-          value={shortDesc}
-          onChange={(e) => setShortDesc(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        />
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Full Description</label>
+              <textarea
+                name="fullDesc"
+                placeholder="Detailed description..."
+                value={formData.fullDesc}
+                onChange={handleChange}
+                className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                required
+              />
+            </div>
 
-        {/* Full Description */}
-        <textarea
-          placeholder="Full Description"
-          value={fullDesc}
-          onChange={(e) => setFullDesc(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-          rows={4}
-        />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Category</label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="fashion">Fashion</option>
+                  <option value="home">Home</option>
+                  <option value="sports">Sports</option>
+                  <option value="books">Books</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Priority</label>
+                <select
+                  name="priority"
+                  value={formData.priority}
+                  onChange={handleChange}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Select Priority</option>
+                  <option value="low">Low</option>
+                  <option value="normal">Normal</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Date</label>
+                <Input
+                  name="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-        {/* Price */}
-        <input
-          placeholder="Price"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        />
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Image URL</label>
+              <div className="relative">
+                <ImageIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  name="imageUrl"
+                  placeholder="https://example.com/image.jpg"
+                  value={formData.imageUrl}
+                  onChange={handleChange}
+                  className="pl-9"
+                />
+              </div>
+            </div>
 
-        {/* Date */}
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        />
-
-        {/* Priority */}
-        <select
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="">Select Priority</option>
-          <option value="low">Low</option>
-          <option value="normal">Normal</option>
-          <option value="high">High</option>
-        </select>
-
-        {/* Category */}
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="">Select Category</option>
-          <option value="electronics">Electronics</option>
-          <option value="fashion">Fashion</option>
-          <option value="home">Home</option>
-          <option value="sports">Sports</option>
-          <option value="books">Books</option>
-        </select>
-
-        {/* Image URL */}
-        <input
-          placeholder="Optional Image URL"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          className="w-full mb-6 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        />
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
-        >
-          Add Product
-        </button>
-      </form>
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              {loading ? "Adding Product..." : "Add Product"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

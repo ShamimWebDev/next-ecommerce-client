@@ -1,149 +1,253 @@
 "use client";
 import Link from "next/link";
+"use client";
+import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { Menu, X, ShoppingBag, Heart, User, LogOut, Package, PlusCircle, Settings } from "lucide-react";
+import { Button } from "@/app/components/ui/button";
 
+/**
+ * Navigation Bar Component
+ * 
+ * A responsive navigation bar with authentication support, mobile menu,
+ * and role-based navigation links for admin users.
+ * 
+ * Features:
+ * - Sticky header with backdrop blur effect
+ * - Mobile-responsive hamburger menu
+ * - User authentication state management
+ * - Admin-specific navigation links
+ * - Wishlist and cart quick access
+ * 
+ * @returns {JSX.Element} The navigation bar component
+ */
 export default function Navbar() {
+  // Retrieve current user session from NextAuth
   const { data: session } = useSession();
+  
+  // State management for dropdown and mobile menu visibility
   const [open, setOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
 
+  // Main navigation links configuration
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Products", href: "/products" },
+    { name: "Categories", href: "/categories" },
+    { name: "Contact", href: "/contact" },
+  ];
+
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="text-lg font-semibold text-indigo-600">
-          NextShop
-        </Link>
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          
+          {/* Brand Logo and Name */}
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary tracking-tight">
+            <ShoppingBag className="h-6 w-6" />
+            <span>NextShop</span>
+          </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/" className="text-slate-700 hover:text-slate-900">Home</Link>
-          <Link href="/products" className="text-slate-700 hover:text-slate-900">Products</Link>
-          <Link href="/about" className="text-slate-700 hover:text-slate-900">About</Link>
-          <Link href="/contact" className="text-slate-700 hover:text-slate-900">Contact</Link>
-
-          {session ? (
-            <div className="relative">
-              {/* User button */}
-              <button
-                onClick={() => setOpen(!open)}
-                className="flex items-center gap-2 px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 text-sm"
+          {/* Desktop Navigation Links - Hidden on mobile */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
               >
-                <span className="text-slate-700">{session.user?.name}</span>
-                <svg
-                  className="w-4 h-4 text-slate-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                {link.name}
+              </Link>
+            ))}
+          </div>
 
-              {/* Dropdown */}
-              {open && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
-                  <div className="px-4 py-2 text-sm text-slate-600 border-b">
-                    {session.user?.email}
+          {/* Desktop Right Section - Auth & Action Buttons */}
+          <div className="hidden md:flex items-center gap-4">
+            
+            {/* Wishlist Icon Button */}
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/wishlist">
+                <Heart className="h-5 w-5" />
+                <span className="sr-only">Wishlist</span>
+              </Link>
+            </Button>
+
+            {/* Shopping Cart Icon Button */}
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/cart">
+                <ShoppingBag className="h-5 w-5" />
+                <span className="sr-only">Cart</span>
+              </Link>
+            </Button>
+
+            {/* Conditional Rendering: User Menu or Login Button */}
+            {session ? (
+              <div className="relative">
+                {/* User Avatar Button - Toggles Dropdown */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative rounded-full"
+                  onClick={() => setOpen(!open)}
+                >
+                  <User className="h-5 w-5" />
+                  <span className="sr-only">User menu</span>
+                </Button>
+
+                {/* User Dropdown Menu */}
+                {open && (
+                  <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-background border shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="p-2 space-y-1">
+                      
+                      {/* User Info Display */}
+                      <div className="px-3 py-2 border-b">
+                        <p className="text-sm font-medium">{session.user?.name || "User"}</p>
+                        <p className="text-xs text-muted-foreground truncate">{session.user?.email}</p>
+                      </div>
+
+                      {/* Admin-Only Navigation Links */}
+                      <Button variant="ghost" className="w-full justify-start" asChild>
+                        <Link href="/add-product" className="flex items-center gap-2">
+                          <PlusCircle className="h-4 w-4" />
+                          Add Product
+                        </Link>
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start" asChild>
+                        <Link href="/manage-products" className="flex items-center gap-2">
+                          <Package className="h-4 w-4" />
+                          Manage Products
+                        </Link>
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start" asChild>
+                        <Link href="/settings" className="flex items-center gap-2">
+                          <Settings className="h-4 w-4" />
+                          Settings
+                        </Link>
+                      </Button>
+
+                      {/* Logout Button with Toast Notification */}
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => {
+                          signOut();
+                          toast.info("👋 Logged out successfully");
+                          setOpen(false);
+                        }}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </Button>
+                    </div>
                   </div>
+                )}
+              </div>
+            ) : (
+              // Display Login Button if User Not Authenticated
+              <Button asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setMobileMenu(!mobileMenu)}
+          >
+            {mobileMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            <span className="sr-only">Toggle menu</span>
+          </Button>
+        </div>
+
+        {/* Mobile Menu Panel - Slides in from top */}
+        {mobileMenu && (
+          <div className="md:hidden py-4 space-y-4">
+            
+            {/* Mobile Navigation Links */}
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary hover:bg-muted rounded-md"
+                onClick={() => setMobileMenu(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
+
+            <div className="border-t pt-4 space-y-2">
+              
+              {/* Mobile Quick Access Links */}
+              <Link
+                href="/wishlist"
+                className="flex items-center gap-2 px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary hover:bg-muted rounded-md"
+                onClick={() => setMobileMenu(false)}
+              >
+                <Heart className="h-5 w-5" />
+                Wishlist
+              </Link>
+              <Link
+                href="/cart"
+                className="flex items-center gap-2 px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary hover:bg-muted rounded-md"
+                onClick={() => setMobileMenu(false)}
+              >
+                <ShoppingBag className="h-5 w-5" />
+                Cart
+              </Link>
+
+              {/* Conditional Mobile Auth Section */}
+              {session ? (
+                <>
+                  {/* Mobile Admin Links */}
                   <Link
                     href="/add-product"
-                    className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
-                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary hover:bg-muted rounded-md"
+                    onClick={() => setMobileMenu(false)}
                   >
+                    <PlusCircle className="h-5 w-5" />
                     Add Product
                   </Link>
                   <Link
                     href="/manage-products"
-                    className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
-                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary hover:bg-muted rounded-md"
+                    onClick={() => setMobileMenu(false)}
                   >
+                    <Package className="h-5 w-5" />
                     Manage Products
                   </Link>
+                  
+                  {/* Mobile Logout Option */}
                   <button
                     onClick={() => {
-                      signOut({ callbackUrl: "/login" });
+                      signOut();
                       toast.info("👋 Logged out successfully");
-                      setOpen(false);
+                      setMobileMenu(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-100"
+                    className="flex items-center gap-2 w-full px-3 py-2 text-base font-medium text-destructive hover:bg-destructive/10 rounded-md"
                   >
+                    <LogOut className="h-5 w-5" />
                     Logout
                   </button>
-                </div>
+                </>
+              ) : (
+                // Mobile Login Link
+                <Link
+                  href="/login"
+                  className="block px-3 py-2 text-base font-medium text-primary hover:bg-muted rounded-md"
+                  onClick={() => setMobileMenu(false)}
+                >
+                  Login
+                </Link>
               )}
             </div>
-          ) : (
-            <>
-              <Link href="/login" className="text-slate-700 hover:text-slate-900">Login</Link>
-              <Link
-                href="/register"
-                className="px-3 py-1 rounded bg-indigo-600 text-white hover:bg-indigo-700 text-sm"
-              >
-                Register
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden p-2 rounded hover:bg-slate-100"
-          onClick={() => setMobileMenu(!mobileMenu)}
-        >
-          <svg
-            className="w-6 h-6 text-slate-700"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {mobileMenu ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
+          </div>
+        )}
       </div>
-
-      {/* Mobile Menu */}
-      {mobileMenu && (
-        <div className="md:hidden bg-white border-t border-slate-200 px-4 py-4 space-y-2">
-          <Link href="/" className="block text-slate-700 hover:text-slate-900">Home</Link>
-          <Link href="/products" className="block text-slate-700 hover:text-slate-900">Products</Link>
-          <Link href="/about" className="block text-slate-700 hover:text-slate-900">About</Link>
-          <Link href="/contact" className="block text-slate-700 hover:text-slate-900">Contact</Link>
-
-          {session ? (
-            <>
-              <Link href="/add-product" className="block text-slate-700 hover:text-slate-900">Add Product</Link>
-              <Link href="/manage-products" className="block text-slate-700 hover:text-slate-900">Manage Products</Link>
-              <button
-                onClick={() => {
-                  signOut({ callbackUrl: "/login" });
-                  toast.info("👋 Logged out successfully");
-                  setMobileMenu(false);
-                }}
-                className="block w-full text-left text-red-600 hover:text-red-700"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" className="block text-slate-700 hover:text-slate-900">Login</Link>
-              <Link
-                href="/register"
-                className="block px-3 py-1 rounded bg-indigo-600 text-white hover:bg-indigo-700 text-sm mt-2"
-              >
-                Register
-              </Link>
-            </>
-          )}
-        </div>
-      )}
     </nav>
   );
 }

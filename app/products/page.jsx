@@ -4,123 +4,193 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { Badge } from "@/app/components/ui/badge";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Search, SlidersHorizontal, Eye } from "lucide-react";
 
 // Helper function to highlight search matches
 function highlightText(text, query) {
   if (!query) return text;
   const regex = new RegExp(`(${query})`, "gi");
-  return text.replace(regex, "<mark>$1</mark>");
+  return text.replace(regex, "<mark class='bg-yellow-200 rounded-sm'>$1</mark>");
 }
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [priceRange, setPriceRange] = useState("all");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get("https://next-ecommerce-server-eta.vercel.app/products")
       .then((res) => {
-        console.log("Products fetched:", res.data);
         setProducts(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
       });
   }, []);
 
   const filteredProducts = products.filter((p) => {
     const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
     const matchCategory = category
-      ? p.category.toLowerCase() === category.toLowerCase()
+      ? p.category?.toLowerCase() === category.toLowerCase()
       : true;
-    return matchSearch && matchCategory;
+    
+    let matchPrice = true;
+    if (priceRange === "under-50") matchPrice = p.price < 50;
+    else if (priceRange === "50-100") matchPrice = p.price >= 50 && p.price <= 100;
+    else if (priceRange === "over-100") matchPrice = p.price > 100;
+
+    return matchSearch && matchCategory && matchPrice;
   });
 
+  const categories = ["electronics", "fashion", "home", "sports", "books"];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      {/* Page title + description */}
-      <div className="text-center mb-10">
-        <h2 className="text-4xl font-bold text-slate-900">Our Products</h2>
-        <p className="mt-2 text-slate-600 max-w-2xl mx-auto">
-          Explore our latest collection. Use search or filter to find what you
-          need.
-        </p>
-      </div>
-
-      {/* Search + Category filter */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-10 justify-center">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        />
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="">All Categories</option>
-          <option value="electronics">Electronics</option>
-          <option value="fashion">Fashion</option>
-          <option value="home">Home</option>
-          <option value="sports">Sports</option>
-          <option value="books">Books</option>
-        </select>
-      </div>
-
-      {/* Products grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {filteredProducts.map((p) => (
-          <div
-            key={p._id}
-            className="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col"
-          >
-            {/* Image */}
-            <div className="h-40 bg-slate-100 flex items-center justify-center">
-              {(() => {
-                // console.log("Image URL:", p.image);
-                return p.image ? (
-                  <Image
-                    src={p.image}
-                    alt={p.title}
-                    width={400}
-                    height={300}
-                    unoptimized
-                    // className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span className="text-slate-400">No Image</span>
-                );
-              })()}
+    <div className="container mx-auto px-4 py-12">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Sidebar Filters */}
+        <aside className="w-full md:w-64 space-y-8">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              <SlidersHorizontal className="h-5 w-5" /> Filters
+            </h3>
+            
+            {/* Search */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Search</label>
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
             </div>
 
-            {/* Content */}
-            <div className="p-6 flex flex-col flex-grow">
-              <h3
-                className="text-lg font-semibold text-slate-900 truncate"
-                dangerouslySetInnerHTML={{
-                  __html: highlightText(p.title, search),
-                }}
-              ></h3>
-
-              <p className="mt-2 text-slate-600 line-clamp-2">{p.shortDesc}</p>
-              <p className="mt-2 font-bold text-indigo-600">${p.price}</p>
-
-              {p.category && (
-                <span className="mb-2 inline-block px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded">
-                  {p.category}
-                </span>
-              )}
-
-              <Link
-                href={`/products/${p._id}`}
-                className="mt-auto inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            {/* Category */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Category</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                View Details
-              </Link>
+                <option value="">All Categories</option>
+                {categories.map((c) => (
+                  <option key={c} value={c} className="capitalize">
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Price Range */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Price Range</label>
+              <select
+                value={priceRange}
+                onChange={(e) => setPriceRange(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <option value="all">All Prices</option>
+                <option value="under-50">Under $50</option>
+                <option value="50-100">$50 - $100</option>
+                <option value="over-100">Over $100</option>
+              </select>
             </div>
           </div>
-        ))}
+        </aside>
+
+        {/* Product Grid */}
+        <div className="flex-1">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold tracking-tight">Our Products</h1>
+            <p className="text-muted-foreground mt-2">
+              Showing {filteredProducts.length} results
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+               {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="h-96 bg-muted rounded-xl animate-pulse"></div>
+              ))}
+            </div>
+          ) : filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((p) => (
+                <Card key={p._id} className="group overflow-hidden hover:shadow-lg transition-all duration-300">
+                  <div className="relative aspect-square overflow-hidden bg-muted">
+                    {p.image ? (
+                      <Image
+                        src={p.image}
+                        alt={p.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-muted-foreground">
+                        No Image
+                      </div>
+                    )}
+                    {p.category && (
+                      <Badge className="absolute top-3 right-3 uppercase text-[10px] tracking-wider" variant="secondary">
+                        {p.category}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <CardHeader className="p-4">
+                    <CardTitle className="line-clamp-1 text-lg group-hover:text-primary transition-colors">
+                      <span dangerouslySetInnerHTML={{ __html: highlightText(p.title, search) }} />
+                    </CardTitle>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xl font-bold text-primary">${p.price}</span>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="p-4 pt-0">
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {p.shortDesc}
+                    </p>
+                  </CardContent>
+
+                  <CardFooter className="p-4 pt-0">
+                    <Button asChild className="w-full gap-2">
+                      <Link href={`/products/${p._id}`}>
+                        <Eye className="h-4 w-4" /> View Details
+                      </Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-muted/30 rounded-xl">
+              <h3 className="text-lg font-semibold">No products found</h3>
+              <p className="text-muted-foreground">Try adjusting your filters or search query.</p>
+              <Button 
+                variant="link" 
+                onClick={() => { setSearch(""); setCategory(""); setPriceRange("all"); }}
+                className="mt-4"
+              >
+                Clear all filters
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
